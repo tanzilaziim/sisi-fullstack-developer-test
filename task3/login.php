@@ -2,6 +2,7 @@
 
 session_start();
 require_once "config/database.php";
+require_once "config/activity.php";
 
 $message = "";
 
@@ -20,7 +21,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["id_user"] = $user["ID_USER"];
         $_SESSION["nama_user"] = $user["NAMA_USER"];
         $_SESSION["username"] = $user["USERNAME"];
-
+        $_SESSION["id_jenis_user"] = $user["ID_JENIS_USER"];
+        
+        logActivity(
+            $conn,
+            $user["ID_USER"],
+            "Login ke aplikasi",
+            "SUCCESS",
+            null
+        );
         header("Location: index.php");
         exit;
     } else {
