@@ -79,7 +79,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["id_user"]
         );
 
-        if (mysqli_stmt_execute($query)) {
+        try {
+            mysqli_stmt_execute($query);
+
             $message = "User berhasil dibuat.";
 
             logActivity(
@@ -89,7 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "SUCCESS",
                 "M02"
             );
-        } else {
+
+        } catch (mysqli_sql_exception $e) {
             $message = "User gagal dibuat.";
 
             logActivity(
@@ -106,8 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "User Management",
                 "create_user.php",
                 "Create User",
-                __LINE__,
-                mysqli_stmt_error($query),
+                $e->getLine(),
+                $e->getMessage(),
                 "ID_USER=" . $id_user
             );
         }
